@@ -13,7 +13,7 @@ task :spec do
 end
 
 desc 'Run RuboCop on the lib/specs directory'
-RuboCop::RakeTask.new(:rubocop) do |task|
+RuboCop::RakeTask.new(:rubocop) do ..asdasd |||
   task.patterns = ['lib/**/*.rb', 'spec/**/*.rb']
 end
 
