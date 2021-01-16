@@ -17,17 +17,29 @@ module Danger
   # @tags monday, weekends, time, rattata
   #
   class DangerRubyc < Plugin
+    def lint
+      broken_files = []
 
-    # An attribute that you can read/write from your Dangerfile
-    #
-    # @return   [Array<String>]
-    attr_accessor :my_attribute
+      changed_files.each do |file|
+        next unless File.readable?(file)
 
-    # A method that you can call from your Dangerfile
-    # @return   [Array<String>]
-    #
-    def warn_on_mondays
-      warn 'Trying to merge code on a Monday' if Date.today.wday == 1
+        if file.end_with?('.rb') || file.eql?('Rakefile')
+          broken_files << file unless system('ruby', '-c', file)
+        end
+      end
+
+      if !broken_files.empty?
+        fail("Ruby code is not valid (SyntaxError) in files:
+          **#{broken_files.join('<br/>')}**
+        ")
+      end
+
+    end
+
+    private
+
+    def changed_files
+      (git.modified_files + git.added_files)
     end
   end
 end
