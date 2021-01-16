@@ -17,17 +17,52 @@ module Danger
   # @tags monday, weekends, time, rattata
   #
   class DangerRubyc < Plugin
-
-    # An attribute that you can read/write from your Dangerfile
+    # Runs Ruby files through Rubocop.
     #
-    # @return   [Array<String>]
-    attr_accessor :my_attribute
-
-    # A method that you can call from your Dangerfile
-    # @return   [Array<String>]
+    # @return  [void]
     #
-    def warn_on_mondays
-      warn 'Trying to merge code on a Monday' if Date.today.wday == 1
+    def lint
+      broken_files = []
+
+      fetch_files_to_lint.each do |file|
+        next unless File.readable?(file)
+
+        if file.end_with?('.rb') || file.eql?('Rakefile')
+          broken_files << file unless system('ruby', '-c', file)
+        end
+      end
+
+      if !broken_files.empty?
+        fail("Ruby code is not valid (SyntaxError) in files:
+          **#{broken_files.join('<br/>')}**
+        ")
+      end
+
+    end
+
+    private
+
+    def offenses_message(offending_files, include_cop_names: false)
+      require 'terminal-table'
+
+      message = "### Ruby syntax problems\n\n"
+      table = Terminal::Table.new(
+        headings: %w(File Line Reason),
+        style: { border_i: '|'},
+        rows: offending_files.flat_map do |file|
+          file['offenses'].map do |offense|
+            offense_message = offense['message']
+            offense_message = offense['cop_name'] + ': ' + offense_message if include_cop_names
+            [file['path'], offense['location']['line'], offense_message]
+          end
+        end
+      ).to_s
+      message + table.split("\n")[1..-2].join("\n")
+    end
+
+    def fetch_files_to_lint
+      binding.pry
+      (git.modified_files + git.added_files)
     end
   end
 end
