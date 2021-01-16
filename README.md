@@ -1,15 +1,15 @@
 # danger-rubyc
 
-A description of danger-rubyc.
+Danger plugin to validate syntax for ruby files
 
 ## Installation
 
     $ gem install danger-rubyc
 
 ## Usage
+Add this to your Dangerfile:
 
-    Methods and attributes from this plugin are available in
-    your `Dangerfile` under the `rubyc` namespace.
+    rubyc.lint
 
 ## Development
 
