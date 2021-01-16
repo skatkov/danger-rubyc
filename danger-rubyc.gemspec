@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Rubyc::VERSION
   spec.authors       = ['Stanislav']
   spec.email         = ['git@skatkov.com']
-  spec.description   = %q{A short description of danger-rubyc.}
-  spec.summary       = %q{A longer description of danger-rubyc.}
-  spec.homepage      = 'https://github.com/Stanislav/danger-rubyc'
+  spec.description   = "Danger plugin to validate syntax for ruby files"
+  spec.summary       = "Invalid ruby syntax will not pass."
+  spec.homepage      = 'https://github.com/skatkov/danger-rubyc'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'danger-plugin-api', '~> 1.0'
 
   # General ruby development
-  spec.add_development_dependency 'bundler', '~> 1.3'
+  spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'rake', '~> 10.0'
 
   # Testing support
